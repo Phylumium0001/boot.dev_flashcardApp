@@ -1,4 +1,5 @@
 from core import study_session
+from models.database import Database
 
 
 def main():
@@ -22,18 +23,26 @@ def main():
     if studySession == "1":
         print("Reviewing New Cards")
         # load_session_new_cards()
+        study_session.review_new_cards()
+
     elif studySession == "2":
         print("Reviewing Due Cards")
         # load_session_due_cards()
+        study_session.review_due_cards()
+
     elif studySession == "3":
         print("Cram Session")
         # load_session_cram()
+        study_session.cram_session()
+
     elif studySession == "4":
         print("Mixed Session")
         # load_session_mixed()
+
     elif studySession.upper() == "Q":
         print("Good Bye")
         return "Exit"
+
     else:
         print("Enter a Valid input")
 
