@@ -2,9 +2,7 @@ from core import study_session
 from models.database import Database
 
 
-def main():
-    # Load Cards
-    print("Welcome, to Vocabs App")
+def handle_study_sessions():
     studySession = input(
         """
     Cards
@@ -38,6 +36,7 @@ def main():
     elif studySession == "4":
         print("Mixed Session")
         # load_session_mixed()
+        study_session.mixed_session()
 
     elif studySession.upper() == "Q":
         print("Good Bye")
@@ -45,6 +44,28 @@ def main():
 
     else:
         print("Enter a Valid input")
+
+
+def show_player_stats():
+    return
+
+
+def main():
+    # Load Cards
+    print("Welcome, to Vocabs App")
+    while True:
+        mode = input("""
+        [1] - Player Statistics
+        [2] - Begin Session
+        """)
+        if mode not in ['1', '2']:
+            print("Invalid Input. Try Again.\n")
+            continue
+        if mode == '1':
+            show_player_stats()
+
+        elif mode == '2':
+            handle_study_sessions()
 
 
 if __name__ == "__main__":

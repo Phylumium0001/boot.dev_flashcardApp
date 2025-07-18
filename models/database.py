@@ -1,6 +1,4 @@
 import sqlite3
-import datetime
-import asyncio
 
 
 class Database:
@@ -27,7 +25,7 @@ class Database:
 
         self.c.execute("""
         CREATE TABLE IF NOT EXISTS study_sessions (
-            id PRIMARY KEY NOT NULL,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             session_date DATETIME DEFAULT CURRENT_TIMEZONE,
             cards_studied INTEGER,
             new_cards INTEGER,
@@ -64,15 +62,14 @@ class Database:
         SELECT * FROM cards WHERE next_review < datetime('now') ORDER BY RANDOM() LIMIT 10
         """)
         cards = self.c.fetchall()
-        print(cards)
         return cards
 
-    def get_learning_cards(self):
+    def get_learning_cards(self, limit=20):
         """
-        Cards which have passed their review date
+        Learning cards/Old cards
         """
-        self.c.execute("""
-        SELECT * FROM cards WHERE card_state='learning' ORDER BY RANDOM() LIMIT 20
+        self.c.execute(f"""
+        SELECT * FROM cards WHERE card_state='learning' ORDER BY RANDOM() LIMIT {limit}
         """)
         cards = self.c.fetchall()
         return cards
@@ -102,6 +99,14 @@ class Database:
               card.interval_days, card.repititions, card.next_review,
               card.created_at, card.last_review, card.card_state, card.id))
         self.conn.commit()
+
+    def store_session(self, cards_studied, new_cards, accurate_rate):
+        print("[Database] Saving session")
+        self.c.execute("""
+        INSERT INTO study_sessions
+        (cards_studied,new_cards,accurate_rate)
+         VALUES ($1,$2,$3)
+        """, (cards_studied, new_cards, accurate_rate))
 
 
 if __name__ == "__main__":
