@@ -160,7 +160,7 @@ def mixed_session():
         card_objs = gen_card_objs(cards)
 
         # Run session
-        run_session(card_objs, "Mixed Session")
+        run_session(card_objs, "Mixed Cards Session")
 
     else:
         print("No cards found")

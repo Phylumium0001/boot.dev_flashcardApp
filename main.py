@@ -1,3 +1,4 @@
+from typing import List
 from core import study_session
 from models.database import Database
 
@@ -46,7 +47,7 @@ def handle_study_sessions():
         print("Enter a Valid input")
 
 
-def calc_stats(sessions -> List):
+def calc_stats(sessions: List):
     cram_num = 0
     new_num = 0
     due_num = 0
@@ -55,34 +56,60 @@ def calc_stats(sessions -> List):
     max_accuracy = 1
     min_accuracy = 0
 
-    total_card_num = 0
+    first_session = True
 
-    for session in sessions -> Tuple:
-        id, session_type, session_date,
-        cards_studied, new_cards,
-        accuracy = session
+    for session in sessions:
+        id, session_type, session_date, cards_studied, new_cards, accuracy = session
 
         if session_type == "Cram Session":
             cram_num += 1
-        elif session_type == "New Cards Session"
-        new_num += 1
+        elif session_type == "New Cards Session":
+            new_num += 1
+        elif session_type == "Due Cards Session":
+            due_num += 1
+        elif session_type == "Mixed Cards Session":
+            mixed_num += 1
+
+        if first_session:
+            max_accuracy = accuracy
+            min_accuracy = accuracy
+            first_session = False
+        else:
+            if accuracy > max_accuracy:
+                max_accuracy = accuracy
+            if accuracy < min_accuracy:
+                min_accuracy = accuracy
+
+    return {
+        "cram_sessions": cram_num,
+        "new_sessions": new_num,
+        "due_sessions": due_num,
+        "mixed_sessions": mixed_num,
+        "max_accuracy": max_accuracy,
+        "min_accuracy": min_accuracy,
+    }
 
 
 def show_player_stats():
     db = Database()
 
     sessions = db.get_all_sessions()
-    num_session = len(sessions)
+    stats = calc_stats(sessions)
+    stats['total_cards_number'] = len(sessions)
+    stats['average_accuracy'] = (stats['min_accuracy']+stats['max_accuracy'])/2
 
     print(f"""
     User Name :
-    Total Sessions : {num_session}
-    New Cards Mode : {new_num}
-    Due Cards Mode : {due_num}
-    Cram Mode : {cram_num}
-    Mixed Mode : {mixed_num}
+    Total Sessions   : {stats['total_cards_number']}
+    New Cards Mode   : {stats['new_sessions']}
+    Due Cards Mode   : {stats['due_sessions']}
+    Cram Mode        : {stats['cram_sessions']}
+    Mixed Mode       : {stats['mixed_sessions']}
+
+    Maximum accuracy : {stats['max_accuracy'] * 100}%
+    Minimum accuracy : {stats['min_accuracy'] * 100}%
+    Average accuracy : {stats['average_accuracy'] * 100}%
     """)
-    return
 
 
 def main():
