@@ -6,7 +6,7 @@ from core.space_repitition import calculate_next_review
 from core.store_session import store_session
 
 
-def run_session(cards, cram_mode=False):
+def run_session(cards, session_type):
     """
     Handles Showing the cards
     """
@@ -17,7 +17,7 @@ def run_session(cards, cram_mode=False):
     new_card_num = 0
 
     res_map = {0: 'easy', 1: "good", 2: "hard", 3: "again"}
-    if cram_mode:
+    if session_type == "Cram Session" or session_type == "Mixed Session":
         for card in cards:
             print(card.arabic_word)
             response = input("Q-Quit 0-Easy 1-Good 2-Hard 3-Again >> ")
@@ -26,7 +26,7 @@ def run_session(cards, cram_mode=False):
                 return
 
             # Correct Response(User remmembered)
-            if response in ['1', '2']:
+            if response in ['0', '1']:
                 correct_response += 1
 
             if card.card_state == "new":
@@ -35,7 +35,9 @@ def run_session(cards, cram_mode=False):
             reviewed_cards += 1
 
         accurate_rate = correct_response / reviewed_cards
-        store_session(reviewed_cards, new_card_num, accurate_rate)
+        print(accurate_rate)
+        store_session(session_type, reviewed_cards,
+                      new_card_num, accurate_rate)
 
         return
 
@@ -93,7 +95,7 @@ def review_new_cards():
         card_objs = gen_card_objs(cards)
 
         # Run session
-        run_session(card_objs)
+        run_session(card_objs, "New Cards Session")
 
     else:
         print("No new cards")
@@ -114,7 +116,7 @@ def review_due_cards():
         card_objs = gen_card_objs(cards)
 
         # Run session
-        run_session(card_objs)
+        run_session(card_objs, "Due Cards Session")
 
     else:
         print("No due cards")
@@ -136,7 +138,7 @@ def cram_session():
         card_objs = gen_card_objs(cards)
 
         # Run session
-        run_session(card_objs, cram_mode=True)
+        run_session(card_objs, "Cram Session")
 
     else:
         print("No new cards")
@@ -158,7 +160,7 @@ def mixed_session():
         card_objs = gen_card_objs(cards)
 
         # Run session
-        run_session(card_objs, cram_mode=True)
+        run_session(card_objs, "Mixed Session")
 
     else:
         print("No cards found")

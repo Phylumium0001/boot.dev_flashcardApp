@@ -46,7 +46,42 @@ def handle_study_sessions():
         print("Enter a Valid input")
 
 
+def calc_stats(sessions -> List):
+    cram_num = 0
+    new_num = 0
+    due_num = 0
+    mixed_num = 0
+
+    max_accuracy = 1
+    min_accuracy = 0
+
+    total_card_num = 0
+
+    for session in sessions -> Tuple:
+        id, session_type, session_date,
+        cards_studied, new_cards,
+        accuracy = session
+
+        if session_type == "Cram Session":
+            cram_num += 1
+        elif session_type == "New Cards Session"
+        new_num += 1
+
+
 def show_player_stats():
+    db = Database()
+
+    sessions = db.get_all_sessions()
+    num_session = len(sessions)
+
+    print(f"""
+    User Name :
+    Total Sessions : {num_session}
+    New Cards Mode : {new_num}
+    Due Cards Mode : {due_num}
+    Cram Mode : {cram_num}
+    Mixed Mode : {mixed_num}
+    """)
     return
 
 
@@ -58,14 +93,15 @@ def main():
         [1] - Player Statistics
         [2] - Begin Session
         """)
-        if mode not in ['1', '2']:
+        if mode not in ['1', '2', 'q']:
             print("Invalid Input. Try Again.\n")
             continue
         if mode == '1':
             show_player_stats()
-
         elif mode == '2':
             handle_study_sessions()
+        else:
+            break
 
 
 if __name__ == "__main__":

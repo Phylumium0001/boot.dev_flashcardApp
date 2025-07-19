@@ -26,7 +26,8 @@ class Database:
         self.c.execute("""
         CREATE TABLE IF NOT EXISTS study_sessions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            session_date DATETIME DEFAULT CURRENT_TIMEZONE,
+            session_type TEXT,
+            session_date DATETIME DEFAULT (datetime('now')),
             cards_studied INTEGER,
             new_cards INTEGER,
             accurate_rate REAL);
@@ -100,13 +101,22 @@ class Database:
               card.created_at, card.last_review, card.card_state, card.id))
         self.conn.commit()
 
-    def store_session(self, cards_studied, new_cards, accurate_rate):
+    def store_session(self, session_type, cards_studied, new_cards, accurate_rate):
         print("[Database] Saving session")
         self.c.execute("""
         INSERT INTO study_sessions
-        (cards_studied,new_cards,accurate_rate)
-         VALUES ($1,$2,$3)
-        """, (cards_studied, new_cards, accurate_rate))
+        (session_type, cards_studied,new_cards,accurate_rate)
+         VALUES ($1,$2,$3,$4)
+        """, (session_type, cards_studied, new_cards, accurate_rate))
+        self.conn.commit()
+        print("[Database] Saving success")
+
+    def get_all_sessions(self):
+        print("[Database] Getting Sessions")
+        self.c.execute("SELECT * FROM study_sessions")
+        results = self.c.fetchall()
+        print("[Database] Success")
+        return results
 
 
 if __name__ == "__main__":
@@ -152,4 +162,5 @@ if __name__ == "__main__":
     # db.get_new_cards()
 
     # print(card1)
-    db.get_due_cards()
+    # db.get_due_cards()
+    print(db.get_all_sessions())

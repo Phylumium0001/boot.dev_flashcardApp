@@ -1,6 +1,6 @@
 from models.database import Database
 
 
-def store_session(cards_studied, new_cards, accurate_rate):
+def store_session(session_type, cards_studied, new_cards, accurate_rate):
     db = Database()
-    db.store_session(cards_studied, new_cards, accurate_rate)
+    db.store_session(session_type, cards_studied, new_cards, accurate_rate)
